@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 260px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: #1e293b;
+      background: #ffffff;
+    }
+
+    .header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .header h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: 0.01em;
+    }
+
+    .header p {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .settings {
+      padding: 10px 0;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      transition: background 0.1s;
+    }
+
+    .row:hover {
+      background: #f8fafc;
+    }
+
+    .row-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .row-label span {
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .row-label small {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #cbd5e1;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    input:checked+.slider {
+      background: #6366f1;
+    }
+
+    input:checked+.slider::before {
+      transform: translateX(16px);
+    }
+
+    .divider {
+      height: 1px;
+      background: #f1f5f9;
+      margin: 2px 0;
+    }
+
+    .footer {
+      padding: 8px 16px 12px;
+      font-size: 10px;
+      color: #cbd5e1;
+      text-align: center;
+      border-top: 1px solid #f1f5f9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>🌙 My Site Tools</h1>
+    <p>Settings for dms-siasn.bkn.go.id</p>
+  </div>
+
+  <div class="settings">
+    <div class="row">
+      <div class="row-label">
+        <span>Dark Mode</span>
+        <small>Invert page colors</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-dark">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <div class="row-label">
+        <span>Copy Buttons</span>
+        <small>Show ⧉ next to year &amp; name</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-copy">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <div class="row-label">
+        <span>Paste Buttons</span>
+        <small>Show Paste inside year input</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-paste">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="footer">Only active on dms-siasn.bkn.go.id</div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Dark Mode for My Site",
+  "version": "2.0",
+  "description": "Dark mode + copy buttons for dms-siasn.bkn.go.id",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "My Site Tools"
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.dms-siasn.bkn.go.id/*"],
+      "css": ["dark.css"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

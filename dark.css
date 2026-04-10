@@ -1,0 +1,83 @@
+/* Applied when dark mode is enabled via the extension popup */
+html.ext-dark-mode {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html.ext-dark-mode img,
+html.ext-dark-mode video,
+html.ext-dark-mode iframe,
+html.ext-dark-mode canvas,
+html.ext-dark-mode picture,
+html.ext-dark-mode svg image {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Copy button injected by content.js */
+.ext-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.6;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  vertical-align: middle;
+}
+.ext-copy-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+.ext-copy-btn.ext-copied {
+  background: #dcfce7;
+  color: #16a34a;
+  border-color: #86efac;
+}
+
+.ext-paste-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ext-paste-btn:hover { background: #e2e8f0; color: #1e293b; }
+html.ext-dark-mode .ext-paste-btn { filter: invert(1) hue-rotate(180deg); }
+
+.ext-clear-btn {
+  position: absolute;
+  right: 58px; /* sits just left of the paste button */
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.ext-clear-btn:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
+
+/* Keep copy buttons readable in dark mode (undo invert on them) */
+html.ext-dark-mode .ext-copy-btn {
+  filter: invert(1) hue-rotate(180deg);
+}
