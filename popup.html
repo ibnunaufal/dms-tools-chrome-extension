@@ -14,19 +14,22 @@
       width: 260px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 13px;
-      color: #1e293b;
-      background: #ffffff;
+      color: #f1f5f9;
+      background: #0f172a;
     }
 
     .header {
       padding: 14px 16px 10px;
       border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .header h1 {
-      font-size: 13px;
+      font-size: 20px;
       font-weight: 600;
-      color: #0f172a;
+      color: #fff;
       letter-spacing: 0.01em;
     }
 
@@ -49,7 +52,7 @@
     }
 
     .row:hover {
-      background: #f8fafc;
+      background: #1e293b;
     }
 
     .row-label {
@@ -60,7 +63,7 @@
 
     .row-label span {
       font-weight: 500;
-      color: #0f172a;
+      color: #fff;
     }
 
     .row-label small {
@@ -99,7 +102,7 @@
       height: 14px;
       left: 3px;
       top: 3px;
-      background: white;
+      background: black;
       border-radius: 50%;
       transition: transform 0.2s;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -132,15 +135,20 @@
 <body>
 
   <div class="header">
-    <h1>🌙 My Site Tools</h1>
-    <p>Settings for dms-siasn.bkn.go.id</p>
+    <div>
+      <h1>DMS - Tools</h1>
+      <p>Alat penunjang produktivitas untuk mengerjakan DMS</p>
+    </div>
+    <div>
+      <img src="icon-48.png" alt="DMS Tools Logo" width="32" height="32">
+    </div>
   </div>
 
   <div class="settings">
     <div class="row">
       <div class="row-label">
         <span>Dark Mode</span>
-        <small>Invert page colors</small>
+        <small>Buat halaman jadi mode gelap</small>
       </div>
       <label class="toggle">
         <input type="checkbox" id="toggle-dark">
@@ -153,7 +161,7 @@
     <div class="row">
       <div class="row-label">
         <span>Copy Buttons</span>
-        <small>Show ⧉ next to year &amp; name</small>
+        <small>Tampilkan tombol salin di sebelah NIP &amp; nama</small>
       </div>
       <label class="toggle">
         <input type="checkbox" id="toggle-copy">
@@ -166,7 +174,7 @@
     <div class="row">
       <div class="row-label">
         <span>Paste Buttons</span>
-        <small>Show Paste inside year input</small>
+        <small>Tampilkan tombol Paste di dalam input NIP</small>
       </div>
       <label class="toggle">
         <input type="checkbox" id="toggle-paste">
@@ -175,7 +183,13 @@
     </div>
   </div>
 
-  <div class="footer">Only active on dms-siasn.bkn.go.id</div>
+  <div class="footer">
+    Hanya aktif pada dms-siasn.bkn.go.id
+    <br>
+    Made with ❤️ by <a href="https://naufall.com" target="_blank" style="color: #94a3b8; text-decoration: underline;">Naufal</a>
+    <br>
+    <p id="version"></p>
+  </div>
 
   <script src="popup.js"></script>
 </body>

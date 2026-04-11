@@ -43,3 +43,17 @@ togglePaste.addEventListener('change', () => {
   chrome.storage.sync.set({ pasteButtons: value });
   messageTab({ type: 'SET_PASTE_BUTTONS', value });
 });
+
+// ── Display extension version in footer ───────────────────────────────────────
+chrome.runtime.getPackageDirectoryEntry((root) => {
+  root.getFile('manifest.json', {}, (fileEntry) => {
+    fileEntry.file((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const manifest = JSON.parse(e.target.result);
+        document.getElementById('version').textContent = `Version ${manifest.version}`;
+      };
+      reader.readAsText(file);
+    });
+  });
+});
