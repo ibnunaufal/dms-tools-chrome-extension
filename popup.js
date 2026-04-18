@@ -7,12 +7,14 @@
 const toggleDark = document.getElementById('toggle-dark');
 const toggleCopy = document.getElementById('toggle-copy');
 const togglePaste = document.getElementById('toggle-paste');
+const toggleClipboard = document.getElementById('toggle-clipboard');
 
 // ── Load saved settings into UI ───────────────────────────────────────────────
-chrome.storage.sync.get({ darkMode: false, copyButtons: true }, ({ darkMode, copyButtons }) => {
+chrome.storage.sync.get({ darkMode: false, copyButtons: true, pasteButtons: true, clipboardBar: false }, ({ darkMode, copyButtons, pasteButtons, clipboardBar }) => {
   toggleDark.checked = darkMode;
   toggleCopy.checked = copyButtons;
   togglePaste.checked = pasteButtons;
+  toggleClipboard.checked = clipboardBar;
 });
 
 // ── Send message to the active tab's content script ───────────────────────────
@@ -42,6 +44,12 @@ togglePaste.addEventListener('change', () => {
   const value = togglePaste.checked;
   chrome.storage.sync.set({ pasteButtons: value });
   messageTab({ type: 'SET_PASTE_BUTTONS', value });
+});
+
+toggleClipboard.addEventListener('change', () => {
+  const value = toggleClipboard.checked;
+  chrome.storage.sync.set({ clipboardBar: value });
+  messageTab({ type: 'SET_CLIPBOARD_BAR', value });
 });
 
 // ── Display extension version in footer ───────────────────────────────────────

@@ -77,6 +77,104 @@ html.ext-dark-mode .ext-paste-btn { filter: invert(1) hue-rotate(180deg); }
 .ext-clear-btn:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
 html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
 
+#ext-clipboard-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  min-width: 420px;
+}
+
+.ext-cb-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ext-cb-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 80px;
+}
+
+.ext-cb-label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ext-cb-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #e2e8f0;
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ext-cb-divider {
+  width: 1px;
+  height: 32px;
+  background: #334155;
+  flex-shrink: 0;
+}
+
+.ext-cb-copy-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.ext-cb-copy-btn:hover { background: #4f46e5; }
+
+.ext-cb-clear-btn {
+  padding: 5px 8px;
+  font-size: 12px;
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.ext-cb-clear-btn:hover { color: #ef4444; border-color: #ef4444; }
+
+/* send button in table cells */
+.ext-send-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #6366f1;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s;
+  vertical-align: middle;
+}
+.ext-send-btn:hover { background: #e0e7ff; border-color: #a5b4fc; }
+
+/* clipboard bar is dark already — undo dark mode invert on it */
+html.ext-dark-mode #ext-clipboard-bar { filter: invert(1) hue-rotate(180deg); }
+
 /* Keep copy buttons readable in dark mode (undo invert on them) */
 html.ext-dark-mode .ext-copy-btn {
   filter: invert(1) hue-rotate(180deg);
