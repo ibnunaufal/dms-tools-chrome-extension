@@ -254,10 +254,7 @@ function createClipboardBar() {
       <div class="ext-cb-divider"></div>
       <div class="ext-cb-field">
         <span class="ext-cb-label">Instansi</span>
-        <select class="ext-cb-value" id="ext-cb-institution">
-          <option value="">—</option>
-          <option value="BKN">BKN</option>
-        </select>
+        <input type="text" class="ext-cb-value" placeholder="Nama Instansi" id="ext-cb-institution" />
       </div>
       <div class="ext-cb-divider"></div>
       <div class="ext-cb-field">
@@ -282,7 +279,21 @@ function createClipboardBar() {
   `;
   document.body.appendChild(bar);
 
+  // add event listener to save value ext-cb-institution and save it into clipboardBarData  
+  document
+  .getElementById("ext-cb-institution")
+  .addEventListener("keyup", function (event) {
+    clipboardBarData.instansi = event.target.value;
+  });
+
+  document
+  .getElementById("ext-cb-status")
+  .addEventListener("change", (event) => {
+    clipboardBarData.status = event.target.value;
+  });
+
   document.getElementById("ext-cb-copy").addEventListener("click", () => {
+    console.log(clipboardBarData)
     const { nip, name, instansi, status, type } = clipboardBarData;
     const text = `${nip}\t${name}\t${instansi}\t${status}\t${type}`;
     navigator.clipboard.writeText(text).then(() => {
@@ -293,13 +304,9 @@ function createClipboardBar() {
   });
 
   document.getElementById("ext-cb-clear").addEventListener("click", () => {
-    clipboardBarData = {
-      nip: "",
-      name: "",
-      instansi: "—",
-      status: "—",
-      type: [],
-    };
+    clipboardBarData.nip = ""
+    clipboardBarData.name = ""
+    clipboardBarData.type = []
     updateClipboardBar();
   });
 }
@@ -375,6 +382,8 @@ function makeSendButton(field, getValue) {
           .replace("Dokumen ", "")
           .replace("_", " ")
           .toUpperCase()
+          .replace("DITERIMA", "")
+          .replace("DITOLAK", "")
           .trim();
         // spmt_cpns, cpns, pns, pindah_instansi, skp22, angka_kredit, masa_kerja,
         if (newValue === "CPNS") newValue = "SK CPNS";

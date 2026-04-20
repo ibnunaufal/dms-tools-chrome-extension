@@ -112,6 +112,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
 }
 
 .ext-cb-value {
+  background: #00000000;
   font-size: 13px;
   font-weight: 500;
   color: #e2e8f0;
