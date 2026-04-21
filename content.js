@@ -242,60 +242,84 @@ function createClipboardBar() {
   bar.id = "ext-clipboard-bar";
   bar.innerHTML = `
     <div class="ext-cb-inner">
-      <div class="ext-cb-field">
-        <span class="ext-cb-label">NIP</span>
-        <span class="ext-cb-value" id="ext-cb-nip">—</span>
+      <div class="ext-cb-left">
+        <div class="ext-cb-field-h">
+          <span class="ext-cb-label">NIP</span>
+          <span class="ext-cb-value" id="ext-cb-nip">—</span>
+        </div>
+        <div class="ext-cb-field-h">
+          <span class="ext-cb-label">Name</span>
+          <span class="ext-cb-value" id="ext-cb-name">—</span>
+        </div>
+        <div class="ext-cb-field-h">
+          <span class="ext-cb-label">Instansi</span>
+          <input
+            type="text"
+            class="ext-cb-input"
+            placeholder="Nama Instansi"
+            id="ext-cb-institution"
+          />
+        </div>
       </div>
       <div class="ext-cb-divider"></div>
-      <div class="ext-cb-field">
-        <span class="ext-cb-label">Name</span>
-        <span class="ext-cb-value" id="ext-cb-name">—</span>
+      <div class="ext-cb-center">
+        <div class="ext-cb-field">
+          <span class="ext-cb-label"
+            >Dokumen
+            <p id="ext-cb-type-count" class="ext-cb-type-count">(0)</p></span
+          >
+          <div class="ext-cb-type" id="ext-cb-type"></div>
+        </div>
       </div>
+
       <div class="ext-cb-divider"></div>
-      <div class="ext-cb-field">
-        <span class="ext-cb-label">Instansi</span>
-        <input type="text" class="ext-cb-value" placeholder="Nama Instansi" id="ext-cb-institution" />
-      </div>
-      <div class="ext-cb-divider"></div>
-      <div class="ext-cb-field">
-        <span class="ext-cb-label">Status</span>
-        <select class="ext-cb-value" id="ext-cb-status">
-          <option value="">—</option>
+      <div class="ext-cb-right">
+        <select class="ext-cb-select" id="ext-cb-status">
+          <option value="">Pilih Status</option>
           <option value="TERSEDIA">Tersedia</option>
           <option value="TERISI">Terisi</option>
           <option value="LENGKAP">Lengkap</option>
           <option value="VERIFIKASI">Verifikasi</option>
         </select>
+        <button class="ext-cb-copy-btn" id="ext-cb-copy">⧉ Copy All</button>
+       
       </div>
-      <div class="ext-cb-divider"></div>
-      <div class="ext-cb-field">
-        <span class="ext-cb-label">Dokumen</span>
-        <span class="ext-cb-value" id="ext-cb-type">—</span>
-      </div>
-      <div class="ext-cb-divider"></div>
-      <button class="ext-cb-copy-btn" id="ext-cb-copy">⧉ Copy All</button>
-      <button class="ext-cb-clear-btn" id="ext-cb-clear">✕</button>
+       <button class="ext-cb-clear-btn" id="ext-cb-clear">Reset</button>
     </div>
+
   `;
   document.body.appendChild(bar);
 
-  // add event listener to save value ext-cb-institution and save it into clipboardBarData  
+  // add event listener to save value ext-cb-institution and save it into clipboardBarData
   document
-  .getElementById("ext-cb-institution")
-  .addEventListener("keyup", function (event) {
-    clipboardBarData.instansi = event.target.value;
-  });
+    .getElementById("ext-cb-institution")
+    .addEventListener("keyup", function (event) {
+      clipboardBarData.instansi = event.target.value;
+    });
 
   document
-  .getElementById("ext-cb-status")
-  .addEventListener("change", (event) => {
-    clipboardBarData.status = event.target.value;
-  });
+    .getElementById("ext-cb-status")
+    .addEventListener("change", (event) => {
+      clipboardBarData.status = event.target.value;
+    });
 
   document.getElementById("ext-cb-copy").addEventListener("click", () => {
-    console.log(clipboardBarData)
+    console.log(clipboardBarData);
     const { nip, name, instansi, status, type } = clipboardBarData;
     const text = `${nip}\t${name}\t${instansi}\t${status}\t${type}`;
+    
+    // create alert which fields are not filled yet
+    const missingFields = [];
+    if (!nip) missingFields.push("NIP");
+    if (!name) missingFields.push("Name");
+    if (!instansi) missingFields.push("Instansi");
+    if (!status) missingFields.push("Status");
+    if (type.length === 0) missingFields.push("Dokumen");
+    if (missingFields.length > 0) {
+      alert(`Data Belum Lengkap, Mohon Isi Field Berikut:\n${missingFields.join(", ").toUpperCase()}`);
+      return;
+    }
+
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById("ext-cb-copy");
       btn.textContent = "✓ Copied!";
@@ -304,9 +328,9 @@ function createClipboardBar() {
   });
 
   document.getElementById("ext-cb-clear").addEventListener("click", () => {
-    clipboardBarData.nip = ""
-    clipboardBarData.name = ""
-    clipboardBarData.type = []
+    clipboardBarData.nip = "";
+    clipboardBarData.name = "";
+    clipboardBarData.type = [];
     updateClipboardBar();
   });
 }
@@ -317,9 +341,12 @@ function updateClipboardBar() {
   const i = document.getElementById("ext-cb-institution");
   const s = document.getElementById("ext-cb-status");
   const t = document.getElementById("ext-cb-type");
+  const tc = document.getElementById("ext-cb-type-count");
   if (y) y.textContent = clipboardBarData.nip || "—";
   if (n) n.textContent = clipboardBarData.name || "—";
   if (i) i.textContent = clipboardBarData.instansi || "—";
+  if (tc) tc.textContent = `(${clipboardBarData.type.length})`;
+
 
   // show all types in array, create a badge for each type, add x button to remove each type from clipboardBarData
   if (t) {
@@ -372,7 +399,14 @@ function makeSendButton(field, getValue) {
   const btn = document.createElement("button");
   btn.className = "ext-send-btn";
   btn.title = `Send to clipboard bar`;
-  btn.textContent = "→";
+  const sendIcon = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-bottom-close-icon lucide-panel-bottom-close"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15h18"/><path d="m15 8-3 3-3-3"/></svg>
+  `;
+  const checkIcon = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>
+  `;
+  btn.innerHTML = sendIcon;
+  btn.style.width = "30px";
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (field === "type") {
@@ -394,8 +428,12 @@ function makeSendButton(field, getValue) {
       clipboardBarData[field] = getValue();
     }
     updateClipboardBar();
-    btn.textContent = "✓";
-    setTimeout(() => (btn.textContent = "→"), 1000);
+    btn.innerHTML = checkIcon;
+    btn.classList.add("ext-sent");
+    setTimeout(() => {
+      btn.innerHTML = sendIcon;
+      btn.classList.remove("ext-sent");
+    }, 1000);
   });
   return btn;
 }

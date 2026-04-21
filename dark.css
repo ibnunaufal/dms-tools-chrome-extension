@@ -93,7 +93,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
 
 .ext-cb-inner {
   display: flex;
-  align-items: center;
+  align-items: top;
   gap: 12px;
 }
 
@@ -104,7 +104,97 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
   min-width: 80px;
 }
 
+.ext-cb-field-h {
+  display: flex;
+  flex-direction: row;
+  /* space between */
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px;
+  min-width: 80px;
+}
+
+.ext-cb-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ext-cb-center {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ext-cb-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.ext-sent {
+  background: #dcfce7 !important;
+  color: #16a34a !important;
+  border-color: #86efac !important;
+}
+
+.ext-cb-input {
+  width: 100px;
+  background: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 6px;
+  padding: 3px;
+  margin-left: 5px;
+  text-align: center;
+}
+
+.ext-cb-select {
+  background: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 6px;
+  padding: 3px;
+  margin-left: 5PX;
+}
+
+.ext-cb-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #e2e8f0;
+  background: #334155;
+  border-radius: 6px;
+}
+
+/* div of types badge container, make it 2 lines, max width, and can scroll */
+.ext-cb-type {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 100px;
+  max-width: 170px;
+  max-height: 70px;
+  overflow: auto;
+}
+
+.ext-cb-type-count {
+  margin-left: 4px;
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 500;
+}
+
 .ext-cb-label {
+  display: flex;
   font-size: 10px;
   color: #64748b;
   text-transform: uppercase;
@@ -144,7 +234,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
 .ext-cb-copy-btn:hover { background: #4f46e5; }
 
 .ext-cb-clear-btn {
-  padding: 5px 8px;
+  padding: 2px 5px;
   font-size: 12px;
   background: transparent;
   color: #64748b;
