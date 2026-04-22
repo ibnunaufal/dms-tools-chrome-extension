@@ -419,6 +419,8 @@ function makeSendButton(field, getValue) {
           .replace("DITERIMA", "")
           .replace("DITOLAK", "")
           .trim();
+        // prevent duplicate type
+        if (clipboardBarData.type.includes(newValue)) return;
         // spmt_cpns, cpns, pns, pindah_instansi, skp22, angka_kredit, masa_kerja,
         if (newValue === "CPNS") newValue = "SK CPNS";
         if (newValue === "PNS") newValue = "SK PNS";
