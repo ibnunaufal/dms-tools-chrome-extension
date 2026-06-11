@@ -7,13 +7,15 @@
 const toggleDark = document.getElementById('toggle-dark');
 const toggleCopy = document.getElementById('toggle-copy');
 const togglePaste = document.getElementById('toggle-paste');
+const toggleTemplate = document.getElementById('toggle-template');
 const toggleClipboard = document.getElementById('toggle-clipboard');
 
 // ── Load saved settings into UI ───────────────────────────────────────────────
-chrome.storage.sync.get({ darkMode: false, copyButtons: true, pasteButtons: true, clipboardBar: false }, ({ darkMode, copyButtons, pasteButtons, clipboardBar }) => {
+chrome.storage.sync.get({ darkMode: false, copyButtons: true, pasteButtons: true, templateButtons: false, clipboardBar: false }, ({ darkMode, copyButtons, pasteButtons, templateButtons, clipboardBar }) => {
   toggleDark.checked = darkMode;
   toggleCopy.checked = copyButtons;
   togglePaste.checked = pasteButtons;
+  toggleTemplate.checked = templateButtons;
   toggleClipboard.checked = clipboardBar;
 });
 
@@ -44,6 +46,12 @@ togglePaste.addEventListener('change', () => {
   const value = togglePaste.checked;
   chrome.storage.sync.set({ pasteButtons: value });
   messageTab({ type: 'SET_PASTE_BUTTONS', value });
+});
+
+toggleTemplate.addEventListener('change', () => {
+  const value = toggleTemplate.checked;
+  chrome.storage.sync.set({ templateButtons: value });
+  messageTab({ type: 'SET_TEMPLATE_BUTTONS', value });
 });
 
 toggleClipboard.addEventListener('change', () => {

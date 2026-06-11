@@ -17,6 +17,235 @@ function applyDarkMode(enabled) {
   document.documentElement.classList.toggle("ext-dark-mode", enabled);
 }
 
+// ── show template buttons  ───────────────────────────────────────────────────
+function makeShowTemplateButton(input) {
+  // get template from extension storage
+  var allTemplate = [];
+  chrome.storage.sync.get({ templates: {} }, ({ templates }) => {
+    for (const [type, elements] of Object.entries(templates)) {
+      allTemplate.push({ type, elements });
+    }
+  });
+  console.log("Loaded templates from storage:", allTemplate);
+
+  const btn = document.createElement("button");
+  btn.className = "ext-add-template-btn";
+  btn.textContent = "Pilih Template Yang Sudah Ada";
+  btn.title = "Show templates";
+  // btn.addEventListener("click", (e) => {
+  //   e.preventDefault();
+  //   const docTypeEl = input.closest('div.space-y-2')?.querySelector('div.text-sm')
+  //   const label = docTypeEl?.textContent ?? '';
+  //   const docType = label.replace("Dokumen ", "").trim();
+  //   console.log("Injecting template button for document type:", docType);
+
+  // });
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const docTypeEl = input
+      .closest("div.space-y-2")
+      ?.querySelector("div.text-sm");
+    const label = docTypeEl?.textContent ?? "";
+    const docType = label.replace("Dokumen ", "").trim();
+
+    const existing = input.parentElement.querySelector(
+      ".ext-template-dropdown",
+    );
+    if (existing) {
+      existing.remove();
+      return;
+    }
+
+    // Load storage dulu, baru build dropdown
+    chrome.storage.sync.get({ templates: {} }, ({ templates }) => {
+      allTemplate.length = 0; // reset biar tidak duplikat
+      for (const [type, elements] of Object.entries(templates)) {
+        allTemplate.push({ type, elements });
+      }
+
+      const templateEntry = allTemplate.find((t) => t.type === docType);
+      if (!templateEntry) return;
+
+      // ... sisa kode build dropdown seperti biasa
+      // Build dropdown
+      const dropdown = document.createElement("div");
+      dropdown.className = "ext-template-dropdown";
+      dropdown.style.cssText = `
+    position: absolute; z-index: 9999; background: white;
+    border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 100%; padding: 4px 0; margin-top: 4px;
+  `;
+
+      const renderItems = () => {
+        dropdown.innerHTML = "";
+        if (templateEntry.elements.length === 0) {
+          const empty = document.createElement("div");
+          empty.textContent = "No templates available";
+          empty.style.cssText =
+            "padding: 8px 12px; color: #999; font-size: 13px;";
+          dropdown.appendChild(empty);
+          return;
+        }
+
+        templateEntry.elements.forEach((tmpl, idx) => {
+          const row = document.createElement("div");
+          row.style.cssText = `
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 6px 10px; gap: 8px; cursor: pointer;
+      `;
+          row.addEventListener(
+            "mouseenter",
+            () => (row.style.background = "#f5f5f5"),
+          );
+          row.addEventListener("mouseleave", () => (row.style.background = ""));
+
+          const label = document.createElement("span");
+          label.textContent = tmpl;
+          label.style.cssText = "flex: 1; font-size: 13px;";
+          label.addEventListener("click", () => {
+            input.value = tmpl;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+            dropdown.remove();
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "✕";
+          deleteBtn.style.cssText = `
+        background: none; border: none; color: #999; cursor: pointer;
+        font-size: 12px; padding: 2px 4px; border-radius: 3px; line-height: 1;
+      `;
+          deleteBtn.title = "Delete template";
+          deleteBtn.addEventListener(
+            "mouseenter",
+            () => (deleteBtn.style.color = "#e53e3e"),
+          );
+          deleteBtn.addEventListener(
+            "mouseleave",
+            () => (deleteBtn.style.color = "#999"),
+          );
+          deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            templateEntry.elements.splice(idx, 1);
+            chrome.storage.sync.set({
+              templates: allTemplate.reduce((acc, t) => {
+                acc[t.type] = t.elements;
+                return acc;
+              }, {}),
+            });
+            renderItems();
+          });
+
+          row.appendChild(label);
+          row.appendChild(deleteBtn);
+          dropdown.appendChild(row);
+        });
+      };
+
+      renderItems();
+
+      // Position relative to input's parent
+      const parent = input.parentElement;
+      parent.style.position = "relative";
+      parent.appendChild(dropdown);
+
+      // Close on outside click
+      const onOutsideClick = (ev) => {
+        if (!dropdown.contains(ev.target) && ev.target !== btn) {
+          dropdown.remove();
+          document.removeEventListener("click", onOutsideClick);
+        }
+      };
+      setTimeout(() => document.addEventListener("click", onOutsideClick), 0);
+    });
+  });
+  return btn;
+}
+
+// ── Add Template buttons  ───────────────────────────────────────────────────
+function makeAddTemplateButtons(input) {
+  const btn = document.createElement("button");
+  btn.className = "ext-add-template-btn";
+  btn.textContent = "Tambahkan ke Template";
+  btn.title = "Add to template";
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const docTypeEl = input
+      .closest("div.space-y-2")
+      ?.querySelector("div.text-sm");
+    const label = docTypeEl?.textContent ?? "";
+    const docType = label.replace("Dokumen ", "").trim();
+
+    // Save the new template to Extension sync storage
+    chrome.storage.sync.get({ templates: {} }, ({ templates }) => {
+      if (!templates[docType]) {
+        templates[docType] = [];
+      }
+      if (!templates[docType].includes(input.value)) {
+        templates[docType].push(input.value);
+        chrome.storage.sync.set({ templates }, () => {
+          console.log(`Template saved for ${docType}:`, input.value);
+        });
+      }
+    });
+  });
+  return btn;
+}
+
+// ── Inject Template buttons  ───────────────────────────────────────────────────
+function injectAddTemplateButtons() {
+  document
+    .querySelectorAll('input[placeholder="Tulis alasan penolakan"]')
+    .forEach((input) => {
+      const label =
+        input.closest("div.space-y-2")?.querySelector("div.text-sm")
+          ?.textContent ?? "";
+      const docType = label.replace("Dokumen ", "").trim();
+      console.log("Injecting template button for document type:", docType);
+
+      if (input.dataset.extTemplate === "done") return;
+      input.dataset.extTemplate = "done";
+      input.style.paddingRight = "40px";
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText =
+        "position:relative; display:inline-block; width:100%;";
+      input.parentNode.insertBefore(wrapper, input);
+      wrapper.appendChild(input);
+      // create div that make the element are right aligned, but give some gap between it
+      const btnWrapper = document.createElement("div");
+      btnWrapper.style.cssText = `
+        display: flex; margin: 5px 0px; justify-content: flex-end;
+      `;
+      btnWrapper.appendChild(makeAddTemplateButtons(input));
+      btnWrapper.appendChild(makeShowTemplateButton(input));
+      wrapper.appendChild(btnWrapper);
+    });
+}
+
+// remove template buttons and wrapper
+function removeAddTemplateButtons() {
+  document.querySelectorAll(".ext-add-template-btn").forEach((btn) => btn.remove());
+  document.querySelectorAll(".ext-template-dropdown").forEach((dd) => dd.remove());
+  document.querySelectorAll("[data-ext-template]").forEach((el) => {
+    el.style.paddingRight = "";
+    // unwrap: move input back out of the wrapper div
+    const wrapper = el.parentNode;
+    if (wrapper && wrapper.style.position === "relative") {
+      wrapper.parentNode.insertBefore(el, wrapper);
+      wrapper.remove();
+    }
+    delete el.dataset.extTemplate;
+  });
+}
+
+function applyTemplateButtons(enabled) {
+  if (enabled) {
+    injectAddTemplateButtons();
+  } else {
+    removeAddTemplateButtons();
+  }
+}
+
 // ── Paste button  ───────────────────────────────────────────────────
 function makePasteButton(input) {
   const btn = document.createElement("button");
@@ -307,7 +536,7 @@ function createClipboardBar() {
     console.log(clipboardBarData);
     const { nip, name, instansi, status, type } = clipboardBarData;
     const text = `${nip}\t${name}\t${instansi}\t${status}\t${type}`;
-    
+
     // create alert which fields are not filled yet
     const missingFields = [];
     if (!nip) missingFields.push("NIP");
@@ -316,7 +545,9 @@ function createClipboardBar() {
     if (!status) missingFields.push("Status");
     if (type.length === 0) missingFields.push("Dokumen");
     if (missingFields.length > 0) {
-      alert(`Data Belum Lengkap, Mohon Isi Field Berikut:\n${missingFields.join(", ").toUpperCase()}`);
+      alert(
+        `Data Belum Lengkap, Mohon Isi Field Berikut:\n${missingFields.join(", ").toUpperCase()}`,
+      );
       return;
     }
 
@@ -346,7 +577,6 @@ function updateClipboardBar() {
   if (n) n.textContent = clipboardBarData.name || "—";
   if (i) i.textContent = clipboardBarData.instansi || "—";
   if (tc) tc.textContent = `(${clipboardBarData.type.length})`;
-
 
   // show all types in array, create a badge for each type, add x button to remove each type from clipboardBarData
   if (t) {
@@ -498,6 +728,7 @@ function startObserver() {
     injectCopyButtons();
     injectPasteButtons();
     injectSendButtons();
+    injectAddTemplateButtons();
   });
   observer.observe(document.body, { childList: true, subtree: true });
 }
@@ -516,17 +747,20 @@ chrome.storage.sync.get(
     darkMode: false,
     copyButtons: true,
     pasteButtons: true,
+    templateButtons: true,
     clipboardBar: false,
   }, // add clipboardBar
-  ({ darkMode, copyButtons, pasteButtons, clipboardBar }) => {
+  ({ darkMode, copyButtons, pasteButtons, templateButtons, clipboardBar }) => {
     applyDarkMode(darkMode);
     applyCopyButtons(copyButtons);
     applyPasteButtons(pasteButtons); // add this
+    applyTemplateButtons(templateButtons); // add this
     applyClipboardBar(clipboardBar); // add this
     console.log("Settings loaded:", {
       darkMode,
       copyButtons,
       pasteButtons,
+      templateButtons,
       clipboardBar,
     });
   },
@@ -538,5 +772,6 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "SET_DARK_MODE") applyDarkMode(msg.value);
   if (msg.type === "SET_COPY_BUTTONS") applyCopyButtons(msg.value);
   if (msg.type === "SET_PASTE_BUTTONS") applyPasteButtons(msg.value);
+  if (msg.type === "SET_TEMPLATE_BUTTONS") applyTemplateButtons(msg.value);
   if (msg.type === "SET_CLIPBOARD_BAR") applyClipboardBar(msg.value);
 });

@@ -41,6 +41,29 @@ html.ext-dark-mode svg image {
   border-color: #86efac;
 }
 
+.ext-add-template-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.6;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.ext-add-template-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
 .ext-paste-btn {
   position: absolute;
   right: 6px;
