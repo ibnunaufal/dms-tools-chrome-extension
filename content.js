@@ -64,11 +64,7 @@ function makeShowTemplateButton(input) {
         allTemplate.push({ type, elements });
       }
 
-      const templateEntry = allTemplate.find((t) => t.type === docType);
-      if (!templateEntry) return;
-
-      // ... sisa kode build dropdown seperti biasa
-      // Build dropdown
+       // Build dropdown
       const dropdown = document.createElement("div");
       dropdown.className = "ext-template-dropdown";
       dropdown.style.cssText = `
@@ -77,11 +73,13 @@ function makeShowTemplateButton(input) {
     width: 100%; padding: 4px 0; margin-top: 4px;
   `;
 
+      const templateEntry = allTemplate.find((t) => t.type === docType);
+
       const renderItems = () => {
         dropdown.innerHTML = "";
-        if (templateEntry.elements.length === 0) {
+        if (!templateEntry || templateEntry.elements.length === 0) {
           const empty = document.createElement("div");
-          empty.textContent = "No templates available";
+          empty.textContent = "Template masih kosong, tambahkan dulu ya!";
           empty.style.cssText =
             "padding: 8px 12px; color: #999; font-size: 13px;";
           dropdown.appendChild(empty);
@@ -170,6 +168,11 @@ function makeAddTemplateButtons(input) {
   btn.title = "Add to template";
   btn.addEventListener("click", (e) => {
     e.preventDefault();
+    // if input is empty, 
+    if (!input.value.trim()) {
+      alert("Masukkan template yang ingin disimpan terlebih dahulu!");
+      return;
+    }
     const docTypeEl = input
       .closest("div.space-y-2")
       ?.querySelector("div.text-sm");
