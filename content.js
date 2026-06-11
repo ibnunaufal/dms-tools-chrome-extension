@@ -50,7 +50,7 @@ function makeClearButton(input) {
 // Add this new function alongside injectCopyButtons()
 function injectPasteButtons() {
   document
-    .querySelectorAll('input[placeholder="Masukkan NIP"]')
+    .querySelectorAll('input[placeholder="Min. 6 digit"]')
     .forEach((input) => {
       if (input.dataset.extPaste === "done") return;
       input.dataset.extPaste = "done";
