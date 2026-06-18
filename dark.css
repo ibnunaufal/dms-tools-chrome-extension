@@ -109,7 +109,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
   background: #1e293b;
   border: 1px solid #334155;
   border-radius: 12px;
-  padding: 10px 16px;
+  padding: 10px 12px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
   min-width: 420px;
 }
@@ -164,6 +164,12 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
   border-color: #86efac !important;
 }
 
+.ext-cb-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .ext-cb-input {
   width: 100px;
   background: #334155;
@@ -172,9 +178,34 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
   color: #e2e8f0;
   border: none;
   border-radius: 6px;
-  padding: 3px;
-  margin-left: 5px;
-  text-align: center;
+  padding: 3px 20px 3px 3px; /* right padding makes room for the × button */
+}
+
+.ext-cb-clear {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  /* lighter red */
+  color: #ef4444;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.ext-cb-clear:hover {
+  color: red;
+}
+
+.ext-cb-clear.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .ext-cb-select {
@@ -256,7 +287,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
 }
 .ext-cb-copy-btn:hover { background: #4f46e5; }
 
-.ext-cb-clear-btn {
+.ext-cb-reset {
   padding: 2px 5px;
   font-size: 12px;
   background: transparent;
@@ -266,7 +297,7 @@ html.ext-dark-mode .ext-clear-btn { filter: invert(1) hue-rotate(180deg); }
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
-.ext-cb-clear-btn:hover { color: #ef4444; border-color: #ef4444; }
+.ext-cb-reset:hover { color: #ef4444; border-color: #ef4444; }
 
 /* send button in table cells */
 .ext-send-btn {

@@ -484,13 +484,17 @@ function createClipboardBar() {
           <span class="ext-cb-value" id="ext-cb-name">—</span>
         </div>
         <div class="ext-cb-field-h">
-          <span class="ext-cb-label">Instansi</span>
-          <input
-            type="text"
-            class="ext-cb-input"
-            placeholder="Nama Instansi"
-            id="ext-cb-institution"
-          />
+          <div class="ext-cb-input-wrap">
+            <input
+              type="text"
+              class="ext-cb-input"
+              placeholder="Nama Instansi"
+              id="ext-cb-institution"
+            />
+            <button class="ext-cb-clear" id="ext-cb-clear-btn" aria-label="Clear input">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-x-icon lucide-circle-x"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>            
+            </button>
+          </div>
         </div>
       </div>
       <div class="ext-cb-divider"></div>
@@ -516,12 +520,25 @@ function createClipboardBar() {
         <button class="ext-cb-copy-btn" id="ext-cb-copy">⧉ Copy All</button>
        
       </div>
-       <button class="ext-cb-clear-btn" id="ext-cb-clear">Reset</button>
+       <button class="ext-cb-reset" id="ext-cb-reset">Reset</button>
     </div>
 
   `;
   document.body.appendChild(bar);
 
+  const input = document.getElementById('ext-cb-institution');
+  const clearBtn = document.getElementById('ext-cb-clear-btn');
+
+  input.addEventListener('input', () => {
+    console.log('Input length:', input.value.length);
+    clearBtn.classList.toggle('visible', input.value.length > 0);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    clearBtn.classList.remove('visible');
+    input.focus();
+  });
   // add event listener to save value ext-cb-institution and save it into clipboardBarData
   document
     .getElementById("ext-cb-institution")
@@ -561,7 +578,7 @@ function createClipboardBar() {
     });
   });
 
-  document.getElementById("ext-cb-clear").addEventListener("click", () => {
+  document.getElementById("ext-cb-reset").addEventListener("click", () => {
     clipboardBarData.nip = "";
     clipboardBarData.name = "";
     clipboardBarData.type = [];
