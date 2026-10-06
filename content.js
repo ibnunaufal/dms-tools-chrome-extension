@@ -679,14 +679,15 @@ function makeSendButton(field, getValue) {
       }
     } 
     else if (field === "instansi") {
-      // remove 'Pemerintah ', 'Kab. ', 'Kota ', 'Prov. ', 'Daerah ' from the value
-      const value = getValue()
-        .replace("Pemerintah ", "")
-        .replace("Kab. ", "")
-        .replace("Kota ", "")
-        .replace("Prov. ", "")
-        .replace("Daerah ", "")
-        .trim();
+      const removeWords = [
+        "Pemerintah ", "Kab. ", "Kota ", "Prov. ", "Daerah ", "Istimewa ", "D.I. ", "D.K.I. ",
+        "Provinsi ", "Kabupaten "
+      ]; 
+      let value = getValue();
+      removeWords.forEach(word => {
+        const regex = new RegExp(word, "gi");
+        value = value.replace(regex, "");
+      });
       clipboardBarData.instansi = String(value).toUpperCase();
     }
     else {
