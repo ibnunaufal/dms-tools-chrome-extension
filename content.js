@@ -581,6 +581,7 @@ function createClipboardBar() {
   document.getElementById("ext-cb-reset").addEventListener("click", () => {
     clipboardBarData.nip = "";
     clipboardBarData.name = "";
+    clipboardBarData.instansi = "";
     clipboardBarData.type = [];
     updateClipboardBar();
   });
@@ -595,7 +596,7 @@ function updateClipboardBar() {
   const tc = document.getElementById("ext-cb-type-count");
   if (y) y.textContent = clipboardBarData.nip || "—";
   if (n) n.textContent = clipboardBarData.name || "—";
-  if (i) i.textContent = clipboardBarData.instansi || "—";
+  if (i) i.value = clipboardBarData.instansi || "";
   if (tc) tc.textContent = `(${clipboardBarData.type.length})`;
 
   // show all types in array, create a badge for each type, add x button to remove each type from clipboardBarData
@@ -676,7 +677,19 @@ function makeSendButton(field, getValue) {
         if (newValue === "PNS") newValue = "SK PNS";
         clipboardBarData.type.push(newValue);
       }
-    } else {
+    } 
+    else if (field === "instansi") {
+      // remove 'Pemerintah ', 'Kab. ', 'Kota ', 'Prov. ', 'Daerah ' from the value
+      const value = getValue()
+        .replace("Pemerintah ", "")
+        .replace("Kab. ", "")
+        .replace("Kota ", "")
+        .replace("Prov. ", "")
+        .replace("Daerah ", "")
+        .trim();
+      clipboardBarData.instansi = String(value).toUpperCase();
+    }
+    else {
       clipboardBarData[field] = getValue();
     }
     updateClipboardBar();
@@ -715,12 +728,22 @@ function injectSendButtons() {
       );
     }
 
-    // Type cell (index 3)
+    // Instansi cell (index 3)
     if (!cells[3].dataset.extSend) {
       cells[3].dataset.extSend = "done";
       cells[3].appendChild(
-        makeSendButton("type", () =>
+        makeSendButton("instansi", () =>
           cells[3].innerText.replace("→", "").replace("✓", "").trim(),
+        ),
+      );
+    }
+
+    // Type cell (index 4)
+    if (!cells[4].dataset.extSend) {
+      cells[4].dataset.extSend = "done";
+      cells[4].appendChild(
+        makeSendButton("type", () =>
+          cells[4].innerText.replace("→", "").replace("✓", "").trim(),
         ),
       );
     }
